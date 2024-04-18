@@ -78,6 +78,7 @@ public class PersonServiceImpl implements PersonService {
 
                 // Check if updatedFilmDTO is not null
                 if (updatedFilmDTO != null && updatedFilmDTO.getTitle() != null && updatedFilmDTO.getRelease_date() != null) {
+                    updatedFilmDTO.setName(updatedFilmDTO.getTitle()); // Set the name to the title for the response
                     updatedFilmsDTO.add(updatedFilmDTO);
                 } else {
                     throw new FilmNotFoundException("Film not found because updatedFilmDTO is null or title/release_date is null");
