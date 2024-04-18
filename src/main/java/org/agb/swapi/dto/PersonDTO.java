@@ -1,19 +1,26 @@
 package org.agb.swapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.Data;
-import org.agb.swapi.utility.FilmDTODeserializer;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
-@Data
-public class PersonDTO {
+@Getter
+@Setter
+public class PersonDTO implements Serializable {
 
     private String name;
     private String birth_year;
     private String gender;
     private String planet_name;
-    @JsonDeserialize(contentUsing = FilmDTODeserializer.class)
+    private String fastest_vehicle_driven;
+
+    // This annotation is used to prevent the homeworld field from being serialized
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String homeworld;
     private List<FilmDTO> films;
+
+
 }

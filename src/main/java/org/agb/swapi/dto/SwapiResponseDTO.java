@@ -4,10 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
-public class PlanetDTO implements Serializable {
+public class SwapiResponseDTO implements Serializable {
 
-    private String name;
+ private List<PersonDTO> results;
+
 }

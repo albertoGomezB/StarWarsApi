@@ -1,8 +1,8 @@
 package org.agb.swapi.service;
 
-import org.agb.swapi.dto.PersonDTO;
+import org.agb.swapi.dto.SwapiResponseDTO;
 
 public interface PersonService {
 
-    PersonDTO searchPersonByName(String name);
+    SwapiResponseDTO searchPersonByName(String name);
 }

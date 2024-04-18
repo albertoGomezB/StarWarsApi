@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.agb.swapi.client.SWClient;
 import org.agb.swapi.dto.FilmDTO;
 import org.agb.swapi.dto.PersonDTO;
+import org.agb.swapi.dto.PlanetDTO;
+import org.agb.swapi.dto.SwapiResponseDTO;
+import org.agb.swapi.exception.FilmNotFoundException;
+import org.agb.swapi.exception.PlanetNotFoundException;
 import org.agb.swapi.service.PersonService;
-import org.agb.swapi.service.PlanetService;
 import org.agb.swapi.utility.ExtractUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +17,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the implementation of the PersonService interface.
+ */
+
 @Service
 @RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
@@ -21,20 +28,42 @@ public class PersonServiceImpl implements PersonService {
     private static final Logger logger = LoggerFactory.getLogger(PersonServiceImpl.class);
 
     private final SWClient swClient;
-    private final PlanetService planetService;
 
     @Override
-    public PersonDTO searchPersonByName(String name) {
+    public SwapiResponseDTO searchPersonByName(String name) {
 
-        logger.info("PersonName : {}", name);
+        // Get the SwapiResponseDTO by name from the client
+        SwapiResponseDTO swapiResponseDTO = swClient.searchPeopleByName(name);
 
-        // Get the person by name from the SWClient
-        PersonDTO personDTO = swClient.searchPersonByName(name);
-        logger.info("PersonDTO retrieved from SWClient: {}", personDTO);
+        // Iterate through the results and update planet and films information
+        List<PersonDTO> updatedResults = new ArrayList<>();
+        for (PersonDTO personDTO : swapiResponseDTO.getResults()) {
 
-        if (personDTO.getFilms() != null) {
+            // Get the planet details using the extracted planet ID from the person's planet URL
+            String planetId = personDTO.getHomeworld();
 
-            // Get the movies from the person
+            // Extract the id from the planet url
+            if(planetId  != null && !planetId.isEmpty()) {
+                planetId = ExtractUrl.extractIdFromUrl(planetId);
+
+            } else {
+                throw new PlanetNotFoundException("Planet not found because planetId is null or empty");
+            }
+
+            PlanetDTO planetDTO = swClient.getPlanetById(planetId);
+            String planetName = null;
+
+            // Check if planetDTO is not null and contains a name
+            if (planetDTO != null) {
+                planetName = planetDTO.getName();
+            } else {
+                throw new PlanetNotFoundException("Planet not found because planetDTO is null");
+            }
+
+            // Set the planet name in the person DTO
+            personDTO.setPlanet_name(planetName);
+
+            // Get the films
             List<FilmDTO> filmsDTO = personDTO.getFilms();
             List<FilmDTO> updatedFilmsDTO = new ArrayList<>();
 
@@ -42,20 +71,28 @@ public class PersonServiceImpl implements PersonService {
             for (FilmDTO filmDTO : filmsDTO) {
 
                 // Extract the id from the film url
-                FilmDTO updatedFilmDTO = swClient.getFilmById(ExtractUrl.extractIdFromUrl(filmDTO.getUrl()));
-                updatedFilmsDTO.add(updatedFilmDTO);
+                String filmId = ExtractUrl.extractIdFromUrl(filmDTO.getUrl());
+
+                // Get the film details using the extracted film ID
+                FilmDTO updatedFilmDTO = swClient.getFilmById(filmId);
+
+                // Check if updatedFilmDTO is not null
+                if (updatedFilmDTO != null && updatedFilmDTO.getTitle() != null && updatedFilmDTO.getRelease_date() != null) {
+                    updatedFilmsDTO.add(updatedFilmDTO);
+                } else {
+                    throw new FilmNotFoundException("Film not found because updatedFilmDTO is null or title/release_date is null");
+                }
             }
 
             // Set the updated films to the personDTO
             personDTO.setFilms(updatedFilmsDTO);
+            updatedResults.add(personDTO);
         }
 
-        // Get the planet name by id from the Planet Service and set it to the personDTO
-        String planetName = planetService.getPlanetNameById(personDTO.getPlanet_name());
-        personDTO.setPlanet_name(planetName);
-        logger.info("PersonDTO after setting planet name: {}", personDTO);
+        swapiResponseDTO.setResults(updatedResults);
 
-        return personDTO;
+        logger.info("SwapiResponseDTO after settings: {}", swapiResponseDTO);
+
+        return swapiResponseDTO;
     }
-
 }
