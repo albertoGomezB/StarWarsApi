@@ -19,10 +19,9 @@ public class PersonDTO implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  // This annotation is used to prevent the attribute field from being serialized
     private String homeworld;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<VehicleDTO> vehicles;
+    private transient List<VehicleDTO> vehicles;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<StarshipDTO> starships;
-    private List<FilmDTO> films;
-
+    private transient List<StarshipDTO> starships;
+    private transient List<FilmDTO> films;
 
 }

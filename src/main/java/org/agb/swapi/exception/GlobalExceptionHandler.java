@@ -42,6 +42,20 @@ public class GlobalExceptionHandler {
         return handleNotFoundException(errorMessage);
     }
 
+    @ExceptionHandler(StarshipNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiError> handleStarshipNotFoundException(StarshipNotFoundException e) {
+        String errorMessage = "Starship not found";
+        return handleNotFoundException(errorMessage);
+    }
+
+    @ExceptionHandler(VehicleNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiError> handleVehicleNotFoundException(VehicleNotFoundException e) {
+        String errorMessage = "Vehicle not found";
+        return handleNotFoundException(errorMessage);
+    }
+
     private ResponseEntity<ApiError> handleNotFoundException(String errorMessage) {
 
         LocalDateTime timestamp = LocalDateTime.now();

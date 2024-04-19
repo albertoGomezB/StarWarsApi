@@ -1,9 +1,8 @@
 package org.agb.swapi.dto;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import lombok.*;
 
 import java.io.Serializable;

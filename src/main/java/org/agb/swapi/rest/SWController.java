@@ -5,7 +5,6 @@ import org.agb.swapi.dto.PersonDTO;
 import org.agb.swapi.dto.SwapiResponseDTO;
 import org.agb.swapi.exception.PersonNotFoundException;
 import org.agb.swapi.service.PersonService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,19 +20,13 @@ public class SWController {
 
     @GetMapping("/person-info")
     public ResponseEntity<PersonDTO> searchPersonByName(@RequestParam("name") String name) {
-        try {
-            // Get the person information from the SWAPI
-            SwapiResponseDTO responseDTO = personService.searchPersonByName(name);
 
-            if (responseDTO != null && !responseDTO.getResults().isEmpty()) {
-                // Return the first person found
-                return ResponseEntity.ok(responseDTO.getResults().getFirst());
+        SwapiResponseDTO responseDTO = personService.searchPersonByName(name); // Get the person information from the swapi
 
-            } else {
-                throw new PersonNotFoundException("Person not found with the given name");
-            }
-        } catch (PersonNotFoundException e) {
-            throw e;
+        if (responseDTO != null && !responseDTO.getResults().isEmpty()) {
+            return ResponseEntity.ok(responseDTO.getResults().getFirst()); // Return the first person found
+        } else {
+            throw new PersonNotFoundException("Person not found with the given name");
         }
     }
 
