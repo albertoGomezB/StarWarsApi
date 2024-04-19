@@ -1,8 +1,6 @@
 package org.agb.swapi.client;
 
-import org.agb.swapi.dto.FilmDTO;
-import org.agb.swapi.dto.PlanetDTO;
-import org.agb.swapi.dto.SwapiResponseDTO;
+import org.agb.swapi.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +12,12 @@ public interface SWClient {
 
     @GetMapping("/planets/{id}/")
     PlanetDTO getPlanetById(@PathVariable("id") String id);
+
+    @GetMapping("/starships/{id}/")
+    StarshipDTO getStarshipById(@PathVariable("id") String id);
+
+    @GetMapping("/vehicles/{id}/")
+    VehicleDTO getVehicleById(@PathVariable("id") String id);
 
     @GetMapping("/people/")
     SwapiResponseDTO searchPeopleByName(@RequestParam("search") String name);
