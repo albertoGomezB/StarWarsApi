@@ -36,7 +36,7 @@ public class SWController {
         SwapiResponseDTO responseDTO = personService.searchPersonByName(name); // Get the person information from the swapi
 
         if (responseDTO != null && !responseDTO.getResults().isEmpty()) {
-            return ResponseEntity.ok(responseDTO.getResults().getFirst()); // Return the first person found
+            return ResponseEntity.ok(responseDTO.getResults().get(0)); // Return the first person found
         } else {
             throw new PersonNotFoundException("Person not found with the given name");
         }
