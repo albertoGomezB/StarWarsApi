@@ -14,6 +14,7 @@ It has a controller that receives a name of a character for parameter and return
 - OpenApi
 - Junit 5, Mockito
 - Docker
+- Sonar
 
 ## Installation and execution
 
