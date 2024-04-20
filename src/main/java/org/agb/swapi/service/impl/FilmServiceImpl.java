@@ -6,6 +6,7 @@ import org.agb.swapi.dto.FilmDTO;
 import org.agb.swapi.exception.FilmNotFoundException;
 import org.agb.swapi.service.FilmService;
 import org.agb.swapi.utility.ExtractUrl;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class FilmServiceImpl implements FilmService {
     private final SWClient swClient;
 
     @Override
+    @Cacheable(value = "films", key = "#filmsDTO.hashCode()")
     public List<FilmDTO> getUpdatedFilms(List<FilmDTO> filmsDTO) {
 
         List<FilmDTO> updatedFilmsDTO = new ArrayList<>();

@@ -6,6 +6,7 @@ import org.agb.swapi.dto.PlanetDTO;
 import org.agb.swapi.exception.PlanetNotFoundException;
 import org.agb.swapi.service.PlanetService;
 import org.agb.swapi.utility.ExtractUrl;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,6 +20,7 @@ public class PlanetServiceImpl implements PlanetService {
     private final SWClient swClient;
 
     @Override
+    @Cacheable(value = "planets", key = "#planetUrl")
     public String getPlanetName(String planetUrl) {
 
         String planetId = ExtractUrl.extractLastOneCharacterFromUrl(planetUrl); // Extract the planet id

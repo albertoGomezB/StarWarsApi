@@ -8,6 +8,7 @@ import org.agb.swapi.exception.StarshipNotFoundException;
 import org.agb.swapi.exception.VehicleNotFoundException;
 import org.agb.swapi.service.VehicleService;
 import org.agb.swapi.utility.ExtractUrl;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class VehicleServiceImpl  implements VehicleService {
     private final SWClient swClient;
 
     @Override
+    @Cacheable(value = "vehicles", key = "#vehiclesDTO.hashCode() + #starshipsDTO.hashCode()")
     public String getFastestVehicleOrStarshipDrivenName(List<VehicleDTO> vehiclesDTO, List<StarshipDTO> starshipsDTO) {
 
         String fastestDriven = null;

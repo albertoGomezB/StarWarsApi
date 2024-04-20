@@ -24,4 +24,8 @@ public class FilmDTO implements Serializable {
         this.url = url;
     }
 
+    public FilmDTO(String name, String release_date) {
+        this.name = name;
+        this.release_date = release_date;
+    }
 }
