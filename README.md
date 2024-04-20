@@ -41,10 +41,10 @@ docker build -t 'userDockerHub' starwarsapi .
 docker run -p 8080:8080 'userDockerHub'/starwarsapi
 ```
 
-5. Tests 
-    ```bash
-   mvn test 
-   ```
+5. Tests
+```bash
+mvn test
+```
 
 ## Ports ⚓
 
